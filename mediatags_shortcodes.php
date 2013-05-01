@@ -100,4 +100,18 @@ function mediatag_item_callback_show_meta($post_item, $size='medium')
 
 	return $meta_out;
 }
+function mediatags_mdoctypes($post_item, $size='')
+{
+	// we are relying on Wordpress to determine the doc type
+	$type = get_post_mime_type($post_id)
+	switch ($type)
+		case 'image/jpeg':
+    		case 'image/png':
+    		case 'image/gif':
+    		case default:
+   
+	$image_src 	= wp_get_attachment_url($post_item->ID, $size);
+	return '<li class="media-tag-list" id="media-tag-item-'.$post_item->ID.'"><a
+		href="'.$image_src.'" target="_blank">'.$post_item->post_title.'</a>	 <br/>'.$post_item->post_content.'</li>';
+}
 ?>
