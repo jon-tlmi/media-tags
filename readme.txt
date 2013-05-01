@@ -1,6 +1,6 @@
 === Media Tags ===
-Contributors: Paul Menard
-Donate link: http://www.codehooligans.com/donations/
+Contributors: Paul Menard / Jonathan @TLMI
+Donate link: http://www.codehooligans.com/donations/ OR http://www.leprosymission.org/donate.html
 Tags: media-tags, media tags, media, tags, images, attachments, documents, taxonomy, shortcode, permalinks, role management, bulk admin, gallery
 Requires at least: 3.0
 Tested up to: 3.1
@@ -9,6 +9,8 @@ Stable tag: 3.0.3
 == Description ==
 
 [Plugin Homepage](http://www.codehooligans.com/projects/wordpress/media-tags/ "Media-Tags Plugin for WordPress")
+
+This fork is aimed at making the shortcodes more multi-document-type friendly.
 
 Adds an input to the media upload and management screens. This input field can be used to "tag" a media file. Works with images, documents or anything.
 
