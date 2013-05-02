@@ -105,9 +105,34 @@ function mediatags_mdoctypes($post_item, $size='')
 	// we are relying on Wordpress to determine the doc type
 	$type = get_post_mime_type($post_id)
 	switch ($type)
+		//my, what a load of type...
 		case 'image/jpeg':
     		case 'image/png':
     		case 'image/gif':
+    		case 'image/tiff':
+    		case 'image/x-icon':
+    		case 'video/avi':
+    		case 'video/asf':
+    		case 'video/quicktime':
+    		case 'text/plain':
+    		case 'text/richtext':
+    		case 'text/css':
+    		case 'text/html':
+    		case 'application/rtf':
+    		case 'application/javascript':
+    		case 'application/pdf':
+    		case 'application/msword':
+    		case 'application/vnd.ms-powerpoint':
+    		case 'application/vnd.ms-write':
+    		case 'application/vnd.ms-excel':
+    		case 'application/vnd.ms-access':
+    		case 'application/vnd.ms-project':
+    		case 'application/x-shockwave-flash':
+    		case 'application/java':
+    		case 'application/x-tar':
+    		case 'application/zip':
+    		case 'application/x-gzip':    		
+    		case 'application/x-msdownload':  // exe file
     		case default:
    
 	$image_src 	= wp_get_attachment_url($post_item->ID, $size);
