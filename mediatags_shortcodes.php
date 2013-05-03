@@ -102,6 +102,18 @@ function mediatag_item_callback_show_meta($post_item, $size='medium')
 }
 function mediatags_mdoctypes($post_item, $size='')
 {
+	// build our returned info with the table header, lets start small for now...
+	$mt_returned_data_start = '<table id="table_id">
+	    <thead>
+	        <tr>
+	            <th>Icon</th>
+	            <th>Filename</th>
+	            <th>Filesize</th>
+	        </tr>
+	    </thead>
+	    <tbody>';
+	$mt_returned_data_end = '</tbody>
+</table>';
 	// we are relying on Wordpress to determine the doc type
 	$type = get_post_mime_type($post_id)
 	switch ($type)
@@ -136,7 +148,7 @@ function mediatags_mdoctypes($post_item, $size='')
     		case default:
    
 	$image_src 	= wp_get_attachment_url($post_item->ID, $size);
-	return '<li class="media-tag-list" id="media-tag-item-'.$post_item->ID.'"><a
+	return '<tr class="media-tag-list" id="media-tag-item-'.$post_item->ID.'"><td><a
 		href="'.$image_src.'" target="_blank">'.$post_item->post_title.'</a>	 <br/>'.$post_item->post_content.'</li>';
 }
 ?>
