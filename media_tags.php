@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: Media Tags
-Plugin URI: http://www.codehooligans.com/projects/wordpress/media-tags/
+Plugin Name: Media Tags multidoc fork
+Plugin URI: https://github.com/jon-tlmi/media-tags
 Description: Provides ability to tag media/attachments via Media Management screens
-Author: Paul Menard
+Author: Paul Menard / Jon @TLMI
 Version: 3.0.3
-Author URI: http://www.codehooligans.com
+Author URI: https://github.com
 */
 
 include_once ( dirname(__FILE__) . "/mediatags_config.php");
