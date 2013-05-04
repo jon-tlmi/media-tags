@@ -136,6 +136,7 @@ function mediatags_mdoctypes($post_item, $size='')
 	// info we're going to need
 	$image_src = wp_get_attachment_url($post_item->ID, $size);
 	$mimetype = get_post_mime_type( $post_item );
+	$filesize = filesize( get_attached_file( $post_item->ID ) );
 	
 	// build our returned info with the table header, lets start small for now...
 	$mt_returned_data_start = '<table id="table_id">
@@ -149,8 +150,7 @@ function mediatags_mdoctypes($post_item, $size='')
 	    <tbody>';
 	$mt_returned_data_end = '</tbody>
 	</table>';
-	
-	$mt_returned_data_build = '<tr class="media-tag-list" id="media-tag-item-'.$post_item->ID.'"><td><img src="'.mediatags_get_icon_for_attachment($post_id).'" alt="'.$post_item->post_title.'" /></td> <td><a href="">'.$post_item->post_title.'</a></td> <td>'.$post_item->filesize.'</td> </tr>';
+	$mt_returned_data_build = '<tr class="media-tag-list" id="media-tag-item-'.$post_item->ID.'"><td><img src="'.mediatags_get_icon_for_attachment($post_id).'" alt="'.$post_item->post_title.'" /></td> <td><a href="">'.$post_item->post_title.'</a></td> <td>'.$filesize.'</td> </tr>';
 	// bring it together
 	$mt_returnable = $mt_returned_data_start . $mt_returned_data_build . $mt_returned_data_end; // variable for testing purposes
 	return $mt_returnable;
