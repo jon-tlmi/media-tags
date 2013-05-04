@@ -128,7 +128,7 @@ function mediatags_get_icon_for_attachment($post_id) {
     case 'text/xml':
       return $base . "file_xml.png"; break;
     default:
-      return $base . "document_blank.png";
+      return $base . "document_blank.png"; break;
   }
 }
 function mediatags_mdoctypes($post_item, $size='')
