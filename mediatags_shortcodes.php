@@ -100,8 +100,43 @@ function mediatag_item_callback_show_meta($post_item, $size='medium')
 
 	return $meta_out;
 }
+function mediatags_get_icon_for_attachment($post_id) {
+  $base = get_template_directory_uri() . "./img/";
+  $type = get_post_mime_type($post_id);
+  switch ($type) {
+    case 'image/jpeg':
+    	return $base . "file_jpg.png"; break;
+    case 'image/png':
+    	return $base . "file_png.png"; break;
+    case 'image/gif':
+    	return $base . "file_gif.png"; break;
+    case 'audio/mpeg':
+    	return $base . "file_mp3.png"; break;
+    case 'application/pdf': 
+    	return $base . "file_pdf.png"; break;
+    case 'application/msword':
+    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+    	return $base . "file_doc.png"; break;
+    case 'application/vnd.ms-powerpoint':
+    case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+    	return $base . "file_ppt.png"; break;
+    case 'application/vnd.ms-excel':
+    case 'application/application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+    	return $base . "file_xls"; break;
+    case 'text/html':
+      return $base . "file_html.png"; break;
+    case 'text/xml':
+      return $base . "file_xml.png"; break;
+    default:
+      return $base . "document_blank.png";
+  }
+}
 function mediatags_mdoctypes($post_item, $size='')
 {
+	// info we're going to need
+	$image_src = wp_get_attachment_url($post_item->ID, $size);
+	$mimetype = get_post_mime_type( $post_item );
+	
 	// build our returned info with the table header, lets start small for now...
 	$mt_returned_data_start = '<table id="table_id">
 	    <thead>
@@ -113,42 +148,14 @@ function mediatags_mdoctypes($post_item, $size='')
 	    </thead>
 	    <tbody>';
 	$mt_returned_data_end = '</tbody>
-</table>';
-	// we are relying on Wordpress to determine the doc type
-	$type = get_post_mime_type($post_id)
-	switch ($type)
-		//my, what a load of type...
-		case 'image/jpeg':
-    		case 'image/png':
-    		case 'image/gif':
-    		case 'image/tiff':
-    		case 'image/x-icon':
-    		case 'video/avi':
-    		case 'video/asf':
-    		case 'video/quicktime':
-    		case 'text/plain':
-    		case 'text/richtext':
-    		case 'text/css':
-    		case 'text/html':
-    		case 'application/rtf':
-    		case 'application/javascript':
-    		case 'application/pdf':
-    		case 'application/msword':
-    		case 'application/vnd.ms-powerpoint':
-    		case 'application/vnd.ms-write':
-    		case 'application/vnd.ms-excel':
-    		case 'application/vnd.ms-access':
-    		case 'application/vnd.ms-project':
-    		case 'application/x-shockwave-flash':
-    		case 'application/java':
-    		case 'application/x-tar':
-    		case 'application/zip':
-    		case 'application/x-gzip':    		
-    		case 'application/x-msdownload':  // exe file
-    		case default:
-   
-	$image_src 	= wp_get_attachment_url($post_item->ID, $size);
-	return '<tr class="media-tag-list" id="media-tag-item-'.$post_item->ID.'"><td><a
-		href="'.$image_src.'" target="_blank">'.$post_item->post_title.'</a>	 <br/>'.$post_item->post_content.'</li>';
+	</table>';
+	
+	$mt_returned_data_build = '<tr class="media-tag-list" id="media-tag-item-'.$post_item->ID.'">
+		<td><img src="'.mediatags_get_icon_for_attachment($post_id).'" alt="'.$post_item->post_title.'" /></td>
+		<td>'.$post_item->filesize.'</td>
+		</tr>';
+	// bring it together
+	$mt_returnable = $mt_returned_data_start . $mt_returned_data_build . $mt_returned_data_end; // variable for testing purposes
+	return $mt_returnable;
 }
 ?>
