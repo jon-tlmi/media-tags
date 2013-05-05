@@ -10,10 +10,24 @@ function mediatags_shortcode_handler($atts, $content=null, $tableid=null)
 
 	if (!isset($atts['before_list']))
 		$atts['before_list'] = "<ul>";
+  
+	if ($atts['display_item_callback'] = "mediatags_mdoctypes") {
+		$atts['before_list'] = '<table class="mt_mdoctype">
+		<thead>
+			<tr>
+				<th>Icon</th>
+				<th>Filename</th>
+				<th>Filesize</th>
+			</tr>
+		</thead>
+		<tbody>';
+		$atts['after_list'] = '</tbody>
+		</table>';
+	}
 
-	if (!isset($atts['after_list']))
+  if (!isset($atts['after_list'])) {
 		$atts['after_list'] = "</ul>";
-
+  }
 
 	if ((!isset($atts['display_item_callback'])) || (strlen($atts['display_item_callback']) == 0))
 		$atts['display_item_callback'] = 'default_item_callback';
@@ -138,21 +152,7 @@ function mediatags_mdoctypes($post_item, $size='')
 	$mimetype = get_post_mime_type( $post_item );
 	$filesize = filesize( get_attached_file( $post_item->ID ) );
 	
-	// build our returned info with the table header, lets start small for now...
-	$mt_returned_data_start = '<table id="table_id">
-	    <thead>
-	        <tr>
-	            <th>Icon</th>
-	            <th>Filename</th>
-	            <th>Filesize</th>
-	        </tr>
-	    </thead>
-	    <tbody>';
-	$mt_returned_data_end = '</tbody>
-	</table>';
-	$mt_returned_data_build = '<tr class="media-tag-list" id="media-tag-item-'.$post_item->ID.'"><td><img src="'.mediatags_get_icon_for_attachment($post_id).'" alt="'.$post_item->post_title.'" /></td> <td><a href="'.$image_src.'">'.$post_item->post_title.'</a></td> <td>'.$filesize.'</td> </tr>';
-	// bring it together
-	$mt_returnable = $mt_returned_data_start . $mt_returned_data_build . $mt_returned_data_end; // variable for testing purposes
-	return $mt_returnable;
+	$mt_returned_data = '<tr class="media-tag-list" id="media-tag-item-'.$post_item->ID.'"><td><img src="'.mediatags_get_icon_for_attachment($post_id).'" alt="'.$post_item->post_title.'" /></td> <td><a href="'.$image_src.'">'.$post_item->post_title.'</a></td> <td>'.$filesize.' bytes</td> </tr>';
+	return $mt_returned_data;
 }
 ?>
