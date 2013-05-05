@@ -153,8 +153,10 @@ function mediatags_mdoctypes($post_item, $size='')
 	$image_src = wp_get_attachment_url($post_item->ID, $size);
 	$mimetype = get_post_mime_type( $post_item );
 	$filesize = filesize( get_attached_file( $post_item->ID ) );
-	
-	$mt_returned_data = '<tr class="media-tag-list" id="media-tag-item-'.$post_item->ID.'"><td><img class="filetype-icon" src="'.mediatags_get_icon_for_attachment($post_item).'" alt="'.$post_item->post_title.'" /></td> <td><a href="'.$image_src.'">'.$post_item->post_title.'</a></td> <td>'.$filesize.' bytes</td> </tr>';
+  	// Yes, you could condense the next few lines but this is to make it easier to follow
+  	$filesize_kb = $filesize / 1024;
+  	$filesize_kb_rounded = round($filesize_kb);
+	$mt_returned_data = '<tr class="media-tag-list" id="media-tag-item-'.$post_item->ID.'"><td><img class="filetype-icon" src="'.mediatags_get_icon_for_attachment($post_item).'" alt="'.$post_item->post_title.'" /></td> <td><a href="'.$image_src.'">'.$post_item->post_title.'</a></td> <td>'.$filesize_kb_rounded.' KB</td> </tr>';
 	return $mt_returned_data;
 }
 ?>
