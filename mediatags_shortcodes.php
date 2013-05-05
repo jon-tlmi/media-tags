@@ -115,8 +115,12 @@ function mediatag_item_callback_show_meta($post_item, $size='medium')
 	return $meta_out;
 }
 function mediatags_get_icon_for_attachment($post_id) {
-  $base = get_template_directory_uri() . "./img/";
+  // $base = __FILE__ . "img/";
+  $plugin = "Media Tags";
+  $base = plugin_dir_url( $plugin ) . "media-tags/img/";
   $type = get_post_mime_type($post_id);
+  $file = "mimetype.txt";
+  file_put_contents($file, $type, FILE_APPEND | LOCK_EX);
   switch ($type) {
     case 'image/jpeg':
     	return $base . "file_jpg.png"; break;
@@ -142,7 +146,7 @@ function mediatags_get_icon_for_attachment($post_id) {
     case 'text/xml':
       return $base . "file_xml.png"; break;
     default:
-      return $base . "document_blank.png"; break;
+	return $base . "document_blank.png"; break;
   }
 }
 function mediatags_mdoctypes($post_item, $size='')
@@ -152,7 +156,7 @@ function mediatags_mdoctypes($post_item, $size='')
 	$mimetype = get_post_mime_type( $post_item );
 	$filesize = filesize( get_attached_file( $post_item->ID ) );
 	
-	$mt_returned_data = '<tr class="media-tag-list" id="media-tag-item-'.$post_item->ID.'"><td><img src="'.mediatags_get_icon_for_attachment($post_id).'" alt="'.$post_item->post_title.'" /></td> <td><a href="'.$image_src.'">'.$post_item->post_title.'</a></td> <td>'.$filesize.' bytes</td> </tr>';
+	$mt_returned_data = '<tr class="media-tag-list" id="media-tag-item-'.$post_item->ID.'"><td><img class="filetype-icon" src="'.mediatags_get_icon_for_attachment($post_item).'" alt="'.$post_item->post_title.'" /></td> <td><a href="'.$image_src.'">'.$post_item->post_title.'</a></td> <td>'.$filesize.' bytes</td> </tr>';
 	return $mt_returned_data;
 }
 ?>
