@@ -119,8 +119,6 @@ function mediatags_get_icon_for_attachment($post_id) {
   $plugin = "Media Tags";
   $base = plugin_dir_url( $plugin ) . "media-tags/img/";
   $type = get_post_mime_type($post_id);
-  $file = "mimetype.txt";
-  file_put_contents($file, $type, FILE_APPEND | LOCK_EX);
   switch ($type) {
     case 'image/jpeg':
     	return $base . "file_jpg.png"; break;
