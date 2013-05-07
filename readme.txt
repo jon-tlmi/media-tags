@@ -11,6 +11,11 @@ Stable tag: 3.0.3
 [Plugin Homepage](http://www.codehooligans.com/projects/wordpress/media-tags/ "Media-Tags Plugin for WordPress")
 
 This fork is aimed at making the shortcodes more multi-document-type friendly. It's also coding practice and designed only for my own use at the moment.
+TODO:
+DataTables on the result table
+Setting-ise the columns so they can be re-arranged and different info displayed.
+Add setting for 'Add media' to the front-end which will auto tag uploaded media with the same tags as applied to the page/post host
+Widgetise so that you can have different looking tables across the site.
 
 Adds an input to the media upload and management screens. This input field can be used to "tag" a media file. Works with images, documents or anything.
 
