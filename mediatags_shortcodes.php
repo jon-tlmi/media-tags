@@ -12,7 +12,7 @@ function mediatags_shortcode_handler($atts, $content=null, $tableid=null)
 		$atts['before_list'] = "<ul>";
   
 	if ($atts['display_item_callback'] = "mediatags_mdoctypes") {
-		$atts['before_list'] = '<table class="mt_mdoctype">
+		$atts['before_list'] = '<table class="display datatables" id="mt_mdoctypes">
 		<thead>
 			<tr>
 				<th>Icon</th>
@@ -21,8 +21,24 @@ function mediatags_shortcode_handler($atts, $content=null, $tableid=null)
 			</tr>
 		</thead>
 		<tbody>';
-		$atts['after_list'] = '</tbody>
-		</table>';
+		$atts['after_list'] = "</tbody>
+		</table>
+		<script type='text/javascript'>
+		runScript();
+
+		function runScript() {
+    		// Workaround due to jQuery load issues.
+    		if( window.$ ) {
+        		// action that depends on jQuery.
+				$(document).ready(function() {
+					$('#mt_mdoctypes').dataTable();
+				} );
+    		} else {
+        		// wait 50 milliseconds and try again.
+       		 window.setTimeout( runScript, 50 );
+  		  }
+		}
+		</script>";
 	}
 
   if (!isset($atts['after_list'])) {
@@ -156,7 +172,7 @@ function mediatags_mdoctypes($post_item, $size='')
   	// Yes, you could condense the next few lines but this is to make it easier to follow
   	$filesize_kb = $filesize / 1024;
   	$filesize_kb_rounded = round($filesize_kb);
-	$mt_returned_data = '<tr class="media-tag-list" id="media-tag-item-'.$post_item->ID.'"><td><img class="filetype-icon" src="'.mediatags_get_icon_for_attachment($post_item).'" alt="'.$post_item->post_title.'" /></td> <td><a href="'.$image_src.'">'.$post_item->post_title.'</a></td> <td>'.$filesize_kb_rounded.' KB</td> </tr>';
+	$mt_returned_data = '<tr id="media-tag-item-'.$post_item->ID.'"><td><img class="filetype-icon" src="'.mediatags_get_icon_for_attachment($post_item).'" alt="'.$post_item->post_title.'" /></td> <td><a href="'.$image_src.'">'.$post_item->post_title.'</a></td> <td>'.$filesize_kb_rounded.' KB</td> </tr>';
 	return $mt_returned_data;
 }
 ?>
