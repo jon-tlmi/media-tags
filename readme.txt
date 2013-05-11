@@ -12,7 +12,6 @@ Stable tag: 3.0.3
 
 This fork is aimed at making the shortcodes more multi-document-type friendly. It's also coding practice and designed only for my own use at the moment.
 TODO:
-:DataTables on the result table
 :Attribute-ise the columns so they can be re-arranged and different info displayed.
 :Add setting for 'Add media' to the front-end which will auto tag uploaded media with the same tags as applied to the page/post host
 :Have some sort of message come up when no files matching the tags are found
