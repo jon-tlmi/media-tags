@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: Media Tags multidoc fork
-Plugin URI: https://github.com/jon-tlmi/media-tags
-Description: Provides ability to tag media/attachments via Media Management screens
-Author: Paul Menard / Jon @TLMI
-Version: 3.0.3
-Author URI: https://github.com
+Plugin Name: Media Tags Forked
+Plugin URI: http://www.yourownperil.com
+Description: Provides ability to tag media/attachments via Media Management screens, now with added filetype specfics. Use [media-tags media_tags="example" display_item_callback="mediatags_mdoctypes"] for the multidoc tables.
+Author: Paul Menard / Jon Tsang
+Version: 3.1.2
+Author URI: http://www.codehooligans.com
 */
 
 include_once ( dirname(__FILE__) . "/mediatags_config.php");
@@ -33,9 +33,11 @@ class MediaTags {
 		$this->plugin_version = MEDIA_TAGS_VERSION;
 
 		$plugindir_node 						= dirname(plugin_basename(__FILE__));	
-		$this->plugindir_url 					= get_bloginfo('wpurl') . "/wp-content/plugins/". $plugindir_node;
-	
+		//$this->plugindir_url 					= get_bloginfo('wpurl') . "/wp-content/plugins/". $plugindir_node;
+		$this->plugindir_url 					= WP_CONTENT_URL . "/plugins/". $plugindir_node;
+			
 		// Setup flags for third-party plugins we can integrate with
+		$this->thirdparty = new stdClass();
 		$this->thirdparty->google_sitemap 		= false;
 
 		$this->default_caps						= array();
@@ -74,10 +76,15 @@ class MediaTags {
 		
 		add_shortcode( 'media-tags', 					'mediatags_shortcode_handler' );		
 		add_action( 'template_redirect', 				'mediatags_template_redirect' );	
+	  
+	  	// add script and css for dataTables
+	  	add_action( 'wp_enqueue_scripts', 				'mediatags_mdoc_prereqs');
 	}
 
 	function register_taxonomy() {
 		// Add new taxonomy, make it hierarchical (like categories)
+/*
+		$labels = mediatags_get_taxonomy_labels();
 		  $labels = array(
 		    'name' 				=> _x( 'Media-Tags', 			'taxonomy general name', 		MEDIA_TAGS_I18N_DOMAIN ),
 		    'singular_name' 	=> _x( 'Media-Tag', 			'taxonomy singular name', 		MEDIA_TAGS_I18N_DOMAIN ),
@@ -91,6 +98,9 @@ class MediaTags {
 		    'add_new_item' 		=> _x( 'Add New Media-Tag', 	'taxonomy add new item', 		MEDIA_TAGS_I18N_DOMAIN ),
 		    'new_item_name' 	=> _x( 'New Media-Tag Name', 	'taxonomy new item name', 		MEDIA_TAGS_I18N_DOMAIN ),
 		  );
+*/
+		$labels = mediatags_get_taxonomy_labels();
+	
 
 		register_taxonomy(MEDIA_TAGS_TAXONOMY, MEDIA_TAGS_TAXONOMY, array(
 		    'hierarchical' 		=> false,
@@ -192,7 +202,8 @@ class MediaTags {
 		{
 			foreach($r['media_tags_array'] as $idx => $val)
 			{
-				$r['media_tags_array'][$idx] = sanitize_title_with_dashes($val);
+				//$r['media_tags_array'][$idx] = sanitize_title_with_dashes($val);
+				$r['media_tags_array'][$idx] = sanitize_title($val);
 			}
 		}
 
@@ -204,7 +215,8 @@ class MediaTags {
 			{
 				foreach($r['media_types_array'] as $idx => $val)
 				{
-					$r['media_types_array'][$idx] = sanitize_title_with_dashes($val);
+					//$r['media_types_array'][$idx] = sanitize_title_with_dashes($val);
+					$r['media_types_array'][$idx] = sanitize_title($val);
 				}
 			}
 		}
@@ -334,9 +346,13 @@ class MediaTags {
 				}
 
 				// If the calling system doesn't want the whole list.
-				if (($r['offset'] > 0) || ($r['numberposts'] > 0))
-					$attachment_posts = array_slice($attachment_posts, $r['offset'], $r['numberposts']);
+				//if (($r['offset'] > 0) || ($r['numberposts'] > 0))
+				//	$attachment_posts = array_slice($attachment_posts, $r['offset'], $r['numberposts']);
 				
+				//http://wordpress.org/support/topic/plugin-media-tags-get_attachments_by_media_tags-twice-offset-fix?replies=2
+				if ($r['numberposts'] > 0)
+					$attachment_posts = array_slice($attachment_posts, 0, $r['numberposts']);
+					
 				if ($r['return_type'] === "li")
 				{
 					$attachment_posts_list = "";
