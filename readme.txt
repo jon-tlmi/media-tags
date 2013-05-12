@@ -14,7 +14,6 @@ This fork is aimed at making the shortcodes more multi-document-type friendly. I
 TODO:
 :Attribute-ise the columns so they can be re-arranged and different info displayed.
 :Add setting for 'Add media' to the front-end which will auto tag uploaded media with the same tags as applied to the page/post host
-:Have some sort of message come up when no files matching the tags are found
 
 Adds an input to the media upload and management screens. This input field can be used to "tag" a media file. Works with images, documents or anything.
 
