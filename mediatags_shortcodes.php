@@ -71,6 +71,7 @@ function mediatags_shortcode_handler($atts, $content=null, $tableid=null)
 			$output = $output .$atts['after_list'];			
 		}
 	}
+   if ($output ===NULL) {$output = "No linked tag items found.";}
 	return $output;
 }
 
