@@ -5,18 +5,25 @@ function mediatags_shortcode_handler($atts, $content=null, $tableid=null)
 {
 	global $post, $mediatags;
 	
-	if ((!isset($atts['return_type'])) || ($atts['return_type'] != "li"))
+  if ((!isset($atts['return_type'])) || ($atts['return_type'] != "li")){
 		$atts['return_type'] = "li";
+  }
 
-	if (!isset($atts['before_list']))
+  if (!isset($atts['before_list'])) {
 		$atts['before_list'] = "<ul>";
+  }
   
-	if ($atts['display_item_callback'] = "mediatags_mdoctypes") {
-		$atts['before_list'] = '<table class="display datatables" id="mt_mdoctypes">
+  /** if (!isset($atts['columns'])) {
+	*	// default column layout here. suggest icon, filename, author, filesize.
+	} **/
+  
+	if ($atts['display_item_callback'] == "mediatags_mdoctypes") {
+		$atts['before_list'] = '<table class="display" id="mt_mdoctypes">
 		<thead>
 			<tr>
 				<th>Icon</th>
 				<th>Filename</th>
+				<th>Author</th>
 				<th>Filesize</th>
 			</tr>
 		</thead>
@@ -45,11 +52,13 @@ function mediatags_shortcode_handler($atts, $content=null, $tableid=null)
 		$atts['after_list'] = "</ul>";
   }
 
-	if ((!isset($atts['display_item_callback'])) || (strlen($atts['display_item_callback']) == 0))
+  if ((!isset($atts['display_item_callback'])) || (strlen($atts['display_item_callback']) == 0)) {
 		$atts['display_item_callback'] = 'default_item_callback';
+  }
 
-	if ((isset($atts['post_parent'])) && ($atts['post_parent'] == "this"))
+  if ((isset($atts['post_parent'])) && ($atts['post_parent'] == "this")) {
 		$atts['post_parent'] = $post->ID;
+  }
 		
 	$atts['call_source'] = "shortcode";
 		
@@ -71,7 +80,7 @@ function mediatags_shortcode_handler($atts, $content=null, $tableid=null)
 			$output = $output .$atts['after_list'];			
 		}
 	}
-   if ($output ===NULL) {$output = "No linked tag items found.";}
+   if ($output === NULL) {$output = "No linked tag items found.";}
 	return $output;
 }
 
@@ -164,16 +173,25 @@ function mediatags_get_icon_for_attachment($post_id) {
 	return $base . "document_blank.png"; break;
   }
 }
+function mediatags_mdoc_testing($post_item, $atts)
+{
+  return "You got the right function.";
+}
+
 function mediatags_mdoctypes($post_item, $size='')
 {
 	// info we're going to need
+	$parent = get_post( $post_item->post_parent );
+  	$authorid = $post_item->post_author;
+  $author = get_the_author_meta('nickname', $authorid);
+  //$author = $authorid;
 	$image_src = wp_get_attachment_url($post_item->ID, $size);
 	$mimetype = get_post_mime_type( $post_item );
 	$filesize = filesize( get_attached_file( $post_item->ID ) );
   	// Yes, you could condense the next few lines but this is to make it easier to follow
   	$filesize_kb = $filesize / 1024;
   	$filesize_kb_rounded = round($filesize_kb);
-	$mt_returned_data = '<tr id="media-tag-item-'.$post_item->ID.'"><td><img class="filetype-icon" src="'.mediatags_get_icon_for_attachment($post_item).'" alt="'.$post_item->post_title.'" /></td> <td><a href="'.$image_src.'">'.$post_item->post_title.'</a></td> <td>'.$filesize_kb_rounded.' KB</td> </tr>';
+  $mt_returned_data = '<tr id="media-tag-item-'.$post_item->ID.'"><td><img class="filetype-icon" src="'.mediatags_get_icon_for_attachment($post_item).'" alt="'.$post_item->post_title.'" /></td> <td><a href="'.$image_src.'">'.$post_item->post_title.'</a></td><td>'.$author.'</td> <td>'.$filesize_kb_rounded.' KB</td> </tr>';
 	return $mt_returned_data;
 }
 ?>
