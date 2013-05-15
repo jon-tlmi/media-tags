@@ -25,6 +25,8 @@ function mediatags_shortcode_handler($atts, $content=null, $tableid=null)
 				<th>Filename</th>
 				<th>Author</th>
 				<th>Filesize</th>
+				<th>Thumb</th>
+				<th>Meta</th>
 			</tr>
 		</thead>
 		<tbody>';
@@ -178,20 +180,26 @@ function mediatags_mdoc_testing($post_item, $atts)
   return "You got the right function.";
 }
 
-function mediatags_mdoctypes($post_item, $size='')
+function mediatags_mdoctypes($post_item, $size='thumb')
 {
 	// info we're going to need
 	$parent = get_post( $post_item->post_parent );
   	$authorid = $post_item->post_author;
-  $author = get_the_author_meta('nickname', $authorid);
-  //$author = $authorid;
+  	$author = get_the_author_meta('nickname', $authorid);
 	$image_src = wp_get_attachment_url($post_item->ID, $size);
 	$mimetype = get_post_mime_type( $post_item );
 	$filesize = filesize( get_attached_file( $post_item->ID ) );
   	// Yes, you could condense the next few lines but this is to make it easier to follow
   	$filesize_kb = $filesize / 1024;
   	$filesize_kb_rounded = round($filesize_kb);
-  $mt_returned_data = '<tr id="media-tag-item-'.$post_item->ID.'"><td><img class="filetype-icon" src="'.mediatags_get_icon_for_attachment($post_item).'" alt="'.$post_item->post_title.'" /></td> <td><a href="'.$image_src.'">'.$post_item->post_title.'</a></td><td>'.$author.'</td> <td>'.$filesize_kb_rounded.' KB</td> </tr>';
+  	$mt_returned_data = '<tr id="media-tag-item-'.$post_item->ID.'">
+	<td><img class="filetype-icon" src="'.mediatags_get_icon_for_attachment($post_item).'" alt="'.$post_item->post_title.'" /></td> 
+	<td><a href="'.$image_src.'">'.$post_item->post_title.'</a></td>
+	<td>'.$author.'</td> 
+	<td>'.$filesize_kb_rounded.' KB</td> 
+	<td><img src="'.$image_src.'" title="'.$post_item->post_title.'" /></td>
+	<td>'.mediatag_item_callback_show_meta($post_item, $size='thumb').'</td>
+	</tr>';
 	return $mt_returned_data;
 }
 ?>
