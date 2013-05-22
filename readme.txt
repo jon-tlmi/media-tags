@@ -12,7 +12,6 @@ Stable tag: 3.0.3
 
 This fork is aimed at making the shortcodes more multi-document-type friendly. It's also coding practice and designed only for my own use at the moment.
 TODO:
-:Attribute-ise the columns so they can be re-arranged and different info displayed.
 :Setting-ise the use of the additional css load for dataTables to allow for it to be part of dataTables aware/custom themes.
 :Add setting for 'Add media' to the front-end which will auto tag uploaded media with the same tags as applied to the page/post host
 
