@@ -166,7 +166,8 @@ class MediaTags {
 			'search_by' => 'slug',
 			'size' => 'medium',
 			'tags_compare' => 'OR',
-			'nopaging'	=> ''
+			'nopaging'	=> '',
+		    'columns' => 'icon,filename,author,filesize'
 		);
 		$r = wp_parse_args( $args, $defaults );
 		
@@ -360,7 +361,7 @@ class MediaTags {
 					{
 						if ((strlen($r['display_item_callback']))
 						 && (function_exists($r['display_item_callback'])))
-							$attachment_posts_list .= call_user_func($r['display_item_callback'], $attachment_post, $r['size']);
+							$attachment_posts_list .= call_user_func($r['display_item_callback'], $attachment_post, $r['size'], $r['columns']);
 					}
 					return $attachment_posts_list;
 				}
