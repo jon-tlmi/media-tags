@@ -4,7 +4,13 @@
 function mediatags_shortcode_handler($atts, $content=null, $tableid=null) 
 {
 	global $post, $mediatags;
-	
+  
+  // because we can't necessarily trust input from the contributor
+  $atts = array_map( 'sanitize_text_field', $atts );
+
+  // test stuff
+  // echo mediatags_column_header($atts);
+  // end of test stuff 
   if ((!isset($atts['return_type'])) || ($atts['return_type'] != "li")){
 		$atts['return_type'] = "li";
   }
@@ -18,18 +24,8 @@ function mediatags_shortcode_handler($atts, $content=null, $tableid=null)
 	} **/
   
 	if ($atts['display_item_callback'] == "mediatags_mdoctypes") {
-		$atts['before_list'] = '<table class="display" id="mt_mdoctypes">
-		<thead>
-			<tr>
-				<th>Icon</th>
-				<th>Filename</th>
-				<th>Author</th>
-				<th>Filesize</th>
-				<th>Thumb</th>
-				<th>Meta</th>
-			</tr>
-		</thead>
-		<tbody>';
+	  // insert column bits here
+	  $atts['before_list'] = mediatags_column_header($atts);
 		$atts['after_list'] = "</tbody>
 		</table>
 		<script type='text/javascript'>
@@ -82,7 +78,10 @@ function mediatags_shortcode_handler($atts, $content=null, $tableid=null)
 			$output = $output .$atts['after_list'];			
 		}
 	}
-   if ($output === NULL) {$output = "No linked tag items found.";}
+   if ($output === NULL) 
+   {
+	$output = "No linked tag items found.";
+	}
 	return $output;
 }
 
@@ -91,6 +90,7 @@ function mediatags_shortcode_handler($atts, $content=null, $tableid=null)
 // Your function needs to support the one argument $post_item which is the attachment item itself. 
 
 // In the example (default) function below I use an optional second argument to control the size of the image displayed. The size argument is passed into get_attachments_by_media_tags() to control which image is output. As you can define your own callback function you can obviously control which version of the image you are going to display. 
+
 function default_item_callback($post_item, $size='medium')
 {
 //	echo "post_item<pre>"; print_r($post_item); echo "</pre>";
@@ -175,12 +175,8 @@ function mediatags_get_icon_for_attachment($post_id) {
 	return $base . "document_blank.png"; break;
   }
 }
-function mediatags_mdoc_testing($post_item, $atts)
-{
-  return "You got the right function.";
-}
 
-function mediatags_mdoctypes($post_item, $size='thumb')
+function mediatags_mdoctypes($post_item, $size='thumb', $columns)
 {
 	// info we're going to need
 	$parent = get_post( $post_item->post_parent );
@@ -192,14 +188,65 @@ function mediatags_mdoctypes($post_item, $size='thumb')
   	// Yes, you could condense the next few lines but this is to make it easier to follow
   	$filesize_kb = $filesize / 1024;
   	$filesize_kb_rounded = round($filesize_kb);
-  	$mt_returned_data = '<tr id="media-tag-item-'.$post_item->ID.'">
-	<td><img class="filetype-icon" src="'.mediatags_get_icon_for_attachment($post_item).'" alt="'.$post_item->post_title.'" /></td> 
-	<td><a href="'.$image_src.'">'.$post_item->post_title.'</a></td>
-	<td>'.$author.'</td> 
-	<td>'.$filesize_kb_rounded.' KB</td> 
-	<td><img src="'.$image_src.'" title="'.$post_item->post_title.'" /></td>
-	<td>'.mediatag_item_callback_show_meta($post_item, $size='thumb').'</td>
-	</tr>';
+  	$mt_returned_data = '<tr id="media-tag-item-'.$post_item->ID.'">';
+	//let's deal with the columns again
+	$mdoc_array = mediatags_cleanColumns($columns);
+  	foreach ($mdoc_array as $key => $value) {
+	  switch ($value) {
+		case "icon": $mt_returned_data .= '<td><img class="filetype-icon" src="'.mediatags_get_icon_for_attachment($post_item).'" alt="'.$post_item->post_title.'" /></td>';
+			break;
+		case "author": $mt_returned_data .= '<td>'.$author.'</td>';
+			break;
+		case "filename": $mt_returned_data .= '<td><a href="'.$image_src.'">'.$post_item->post_title.'</a></td>';
+			break;
+		case "filesize": $mt_returned_data .= '<td>'.$filesize_kb_rounded.' KB</td>';
+			break;
+		case "thumb": $mt_returned_data .= '<td><img src="'.$image_src.'" title="'.$post_item->post_title.'" /></td>';
+			break;
+		case "meta": $mt_returned_data .= '<td>'.mediatag_item_callback_show_meta($post_item, $size='thumb').'</td>';
+			break;
+	  }
+	}
+	$mt_returned_data .= '</tr>';
 	return $mt_returned_data;
+}
+function mediatags_validElement($element) {
+  // selected whitelist of columns
+    return $element == "icon" || $element == "filename" || $element == "author" || $element == "filesize" || $element == "meta" || $element == "thumb";
+}
+function mediatags_cleanColumns($incoming) {
+	// if not set or empty, set default values
+	$mdoc_default = "icon,filename,author,filesize"; 
+	if (!isset($incoming)){
+		//let's set some defaults here, being lazy with array creation
+		$mdoc_array = explode(",",$mdoc_default);
+	}
+	  else {
+		$mdoc_array = explode(",",$incoming);
+		//remove any values we don't know with our whitelisting function
+		$mdoc_array_sanitised = array_values(array_filter($mdoc_array, "mediatags_validElement"));
+	  }
+	//wait a minute, what if no valid columns were set?
+	  if (empty($mdoc_array_sanitised)) {
+		$mdoc_array_sanitised = explode(",",$mdoc_default);
+		}
+ return $mdoc_array_sanitised;
+}
+
+function mediatags_column_header($atts) {
+  $incoming = $atts['columns'];
+  $output = '<table class="display" id="mt_mdoctypes"><thead>
+			<tr>';
+  $mdoc_array_sanitised = mediatags_cleanColumns($incoming);
+  // start for each loop
+  foreach ($mdoc_array_sanitised as $key => $value) {
+	// output the corresponding row
+	$output .="<th>".$value."</th>";
+  }
+  // add the closing table header tags
+  $output .= "</tr>
+		</thead>
+		<tbody>";
+  return $output;
 }
 ?>
