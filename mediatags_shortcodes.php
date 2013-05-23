@@ -1,5 +1,7 @@
 <?php
 // [media-tags media_tags="alt-views,page-full,thumb" tags_compare="AND" orderby="menu_order" display_item_callback=""]
+// [media-tags media_tags="test,tribble,ned" tags_compare="AND" display_item_callback=""mediatags_mdoctypes" columns="thumb,icon,filename"]
+// available columns for multi-doctypes are: icon, filename, author, filesize, meta and thumb
 
 function mediatags_shortcode_handler($atts, $content=null, $tableid=null) 
 {
