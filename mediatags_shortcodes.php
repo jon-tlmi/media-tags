@@ -8,9 +8,6 @@ function mediatags_shortcode_handler($atts, $content=null, $tableid=null)
   // because we can't necessarily trust input from the contributor
   $atts = array_map( 'sanitize_text_field', $atts );
 
-  // test stuff
-  // echo mediatags_column_header($atts);
-  // end of test stuff 
   if ((!isset($atts['return_type'])) || ($atts['return_type'] != "li")){
 		$atts['return_type'] = "li";
   }
