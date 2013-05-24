@@ -28,20 +28,9 @@ function mediatags_shortcode_handler($atts, $content=null, $tableid=null)
 		$atts['after_list'] = "</tbody>
 		</table>
 		<script type='text/javascript'>
-		runScript();
-
-		function runScript() {
-    		// Workaround due to jQuery load issues.
-    		if( window.$ ) {
-        		// action that depends on jQuery.
-				$(document).ready(function() {
-					$('#mt_mdoctypes').dataTable();
+				jQuery(document).ready(function() {
+					jQuery('#mt_mdoctypes').dataTable();
 				} );
-    		} else {
-        		// wait 50 milliseconds and try again.
-       		 window.setTimeout( runScript, 50 );
-  		  }
-		}
 		</script>";
 	}
 
