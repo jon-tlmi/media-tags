@@ -176,11 +176,9 @@ function mediatags_admin_terms_sort_columns($cols)
 }
 
 function mediatags_mdoc_prereqs() {
-  $src1 = plugins_url('js/jquery-1.9.1.min.js', __FILE__);
   $src2 = plugins_url('js/jquery.dataTables.min.js', __FILE__);
   $src3 = plugins_url('css/mediatags_mdoc.css', __FILE__);
-	wp_register_script( 'jQuery', $src1 );
-	wp_enqueue_script( 'jQuery' );
+   	wp_enqueue_script( 'jquery' );
   	wp_register_style('tablestyle',$src3);
 	wp_enqueue_style( 'tablestyle' );
 	wp_register_script( 'dataTables', $src2 );
@@ -1085,3 +1083,5 @@ function mediatags_metaboxes() {
 	add_meta_box('tagsdiv-' . MEDIA_TAGS_TAXONOMY, 
 		__( 'Media-Tags', MEDIA_TAGS_I18N_DOMAIN ), 'post_tags_meta_box', null, 'side', 'core', array( 'taxonomy' => MEDIA_TAGS_TAXONOMY ));
 }
+
+
