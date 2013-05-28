@@ -130,6 +130,17 @@ function mediatag_item_callback_show_meta($post_item, $size='medium')
 
 	return $meta_out;
 }
+
+function mediatags_mdoc_prereqs() {
+  $src2 = plugins_url('js/jquery.dataTables.min.js', __FILE__);
+  $src3 = plugins_url('css/mediatags_mdoc.css', __FILE__);
+   	wp_enqueue_script( 'jquery' );
+  	wp_register_style('tablestyle',$src3);
+	wp_enqueue_style( 'tablestyle' );
+	wp_register_script( 'dataTables', $src2 );
+	wp_enqueue_script( 'dataTables' );
+}
+
 function mediatags_get_icon_for_attachment($post_id) {
   // $base = __FILE__ . "img/";
   $plugin = "Media Tags";
@@ -199,7 +210,7 @@ function mediatags_mdoctypes($post_item, $size='thumb', $columns)
 	return $mt_returned_data;
 }
 function mediatags_validElement($element) {
-  // selected whitelist of columns
+  // selected whitelist of columns, makes sure we don't have any unexpected items
     return $element == "icon" || $element == "filename" || $element == "author" || $element == "filesize" || $element == "meta" || $element == "thumb";
 }
 function mediatags_cleanColumns($incoming) {
