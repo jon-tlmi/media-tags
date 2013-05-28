@@ -175,16 +175,6 @@ function mediatags_admin_terms_sort_columns($cols)
 	return $cols;	
 }
 
-function mediatags_mdoc_prereqs() {
-  $src2 = plugins_url('js/jquery.dataTables.min.js', __FILE__);
-  $src3 = plugins_url('css/mediatags_mdoc.css', __FILE__);
-   	wp_enqueue_script( 'jquery' );
-  	wp_register_style('tablestyle',$src3);
-	wp_enqueue_style( 'tablestyle' );
-	wp_register_script( 'dataTables', $src2 );
-	wp_enqueue_script( 'dataTables' );
-}
-
 function mediatags_wp_head()
 {
 	add_mediatags_alternate_link();
